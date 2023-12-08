@@ -2,7 +2,7 @@
 
 # 获取总内存（以MB为单位）和计算90%
 total_mem=$(grep MemTotal /proc/meminfo | awk '{print $2}')
-ninety_percent_mem=$((total_mem * 90 / 100 / 1024))
+ninety_percent_mem=$((total_mem * 80 / 100 / 1024))
 
 # 获取CPU核心数量
 cpu_cores=$(grep -c ^processor /proc/cpuinfo)
