@@ -8,10 +8,13 @@ if [ -z "$NETWORK_INTERFACE" ]; then
     echo "没有找到有效的网络接口。"
     exit 1
 fi
+
 # 流量阈值 (1.8TB in MiB)
 THRESHOLD=1843200
+
 # 脚本名称
 SCRIPT_NAME="check_traffic.sh"
+
 # 脚本的完整路径
 SCRIPT_PATH="/root/${SCRIPT_NAME}"
 
@@ -40,7 +43,12 @@ fi
 
 # 检查流量并停止服务的函数
 check_traffic() {
-    local current_usage=$(vnstat -i $NETWORK_INTERFACE --oneline | awk -F ";" '{print $11}' | awk '{print $1}')
+    # 使用vnstat --json获取本月发送数据量
+    local current_usage=$(vnstat -i $NETWORK_INTERFACE --json m | jq '.interfaces[0].traffic.month[0].tx')
+
+    # 将字节转换为MiB
+    current_usage=$(echo "$current_usage / 1024 / 1024" | bc)
+
     if [ "$current_usage" -ge "$THRESHOLD" ]; then
         systemctl stop XrayR.service
     fi
