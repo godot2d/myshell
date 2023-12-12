@@ -9,8 +9,14 @@ if [ -z "$NETWORK_INTERFACE" ]; then
     exit 1
 fi
 
-# 流量阈值 (1.8TB in MiB)
-THRESHOLD=1843200
+# 检查是否传递了参数，并确保它是数值
+if ! [[ ${1} =~ ^[0-9]+$ ]]; then
+    echo "错误: 参数必须是整数 (表示MiB)。"
+    exit 1
+fi
+
+# 设置流量阈值，默认为1.8TB (1887436 MiB)，如果传递了参数，则使用传递的值
+THRESHOLD=${1:-1887436}
 
 # 脚本名称
 SCRIPT_NAME="check_traffic.sh"
