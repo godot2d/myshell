@@ -44,7 +44,7 @@ fi
 # 检查计划任务是否存在
 if ! crontab -l | grep -q "$SCRIPT_NAME"; then
     echo "添加计划任务..."
-    (crontab -l 2>/dev/null; echo "*/10 * * * * $SCRIPT_PATH") | crontab -
+    (crontab -l 2>/dev/null; echo "*/10 * * * * $SCRIPT_PATH $THRESHOLD") | crontab -
 fi
 
 # 检查流量并停止服务的函数
